@@ -1,0 +1,73 @@
+@font-face {
+  font-family: "MedievalSharp";
+  src: url("MedievalSharp-Regular.ttf") format("truetype");
+}
+
+body,
+html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  /* background: url('/src/background.webp') no-repeat center center fixed; */
+  background-size: cover;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-container {
+  display: none;
+  width: 600px;
+  height: 400px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: none;
+}
+
+#gameCanvas {
+  border-radius: 2%;
+  border: 5px solid white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.75);
+  /* background-color: burlywood; */
+}
+
+.game-title {
+  display: none;
+  padding: 0.5em;
+  font-family: "MedievalSharp", sans-serif;
+  font-size: 4em;
+  color: rgb(10, 116, 51);
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-bottom: 50px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 2%;
+  border: 5px solid white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.game-footer {
+  display: none;
+  font-family: "MedievalSharp", sans-serif;
+  opacity: 0;
+  background-color: black;
+  color: white;
+  border-radius: 2%;
+  margin: 0;
+  padding: 2px;
+  text-align: center;
+}
