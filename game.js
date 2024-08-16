@@ -2,6 +2,7 @@
 import { keyPress, key, activeKeys } from "./keyboard";
 import Hero from "./Hero";
 import { loadImage } from "./loaderAssets";
+import { life, imprimirLife } from "./hud";
 //import redCircle from "./geometries/redCirc";
 
 let CTX;
@@ -28,6 +29,7 @@ let anime;
 let boundaries;
 let bgImage;
 let bgPattern;
+let hubSize = 30;
 
 const game = async () => {
   console.log("Initialize Canvas");
@@ -35,7 +37,7 @@ const game = async () => {
   CTX = CANVAS.getContext("2d");
   boundaries = {
     width: CANVAS.width,
-    height: CANVAS.height,
+    height: CANVAS.height - hubSize,
   };
 
   // Carregar a imagem de fundo
@@ -70,8 +72,12 @@ const loop = () => {
     // smile.draw(CTX);
     if (bgPattern) {
       CTX.fillStyle = "#AAAAAA";
-      CTX.fillRect(0, 0, CANVAS.width, CANVAS.height);
+      CTX.fillRect(0, 0, CANVAS.width, CANVAS.height - hubSize);
+      CTX.fillStyle = "#333333";
+      CTX.fillRect(0, CANVAS.height - hubSize, CANVAS.width, CANVAS.height);
+      imprimirLife(15, CANVAS.height - 7);
     }
+
     hero.move(boundaries, key);
     hero.draw(CTX);
     // enemies.forEach((e) => {

@@ -112,6 +112,7 @@ export default class Hero extends Circle {
       right: { x: this.x + this.speed, y: this.y },
       stopped: { x: this.x, y: this.y },
     };
+
     if (key != null) {
       if (this.controls[key]) {
         this.status = this.controls[key];
