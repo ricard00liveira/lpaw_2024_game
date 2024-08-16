@@ -78,6 +78,7 @@ export default class Hero extends Circle {
       } else {
         this.cellX = 0;
       }
+      
     }, 1000 / ((FRAMES * this.spriteSpeed) / 10));
   }
 
@@ -148,9 +149,9 @@ export default class Hero extends Circle {
   }
 
   shoot(CTX){
+    this.updateBullet();
     this.bullet.circ.draw(CTX);
     console.log("TIRO");
-    
     }
 
   limits(areaDoCanvas) {
@@ -173,6 +174,10 @@ export default class Hero extends Circle {
   updateHit() {
     this.hit.x = this.x + this.width / 2;
     this.hit.y = this.y + this.height / 2;
+  }
+  updateBullet() {
+    this.bullet.circ.x = this.x + this.width / 2;
+    this.bullet.circ.y = this.y + this.height / 2;
   }
 
   colide(other) {

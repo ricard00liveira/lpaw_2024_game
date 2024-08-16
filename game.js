@@ -80,11 +80,7 @@ const loop = () => {
     }
 
     hero.move(boundaries, key);
-    if(key == ' ' && canShoot == true) {
-      canShoot = false;
-      hero.shoot(CTX);
-      canShoot = true;
-    }
+
     hero.draw(CTX);
     // enemies.forEach((e) => {
     //   e.move(boundaries, 0);
@@ -92,7 +88,11 @@ const loop = () => {
     //   //var = teste?verdadeiro:falso;
     //   gameover = !gameover ? hero.colide(e) : true;
     // });
-
+    if(key == ' ' && canShoot == true) {
+      canShoot = false;
+      hero.shoot(CTX);
+      canShoot = true;
+    }
     if (gameover) {
       console.error("MORREU!!!");
       cancelAnimationFrame();
