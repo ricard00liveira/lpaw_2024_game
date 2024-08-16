@@ -16,7 +16,7 @@ const hero = new Hero(
   51,
   51,
   20,
-  1,
+  5,
   102,
   102,
   "/sprite_char_transparente.png",

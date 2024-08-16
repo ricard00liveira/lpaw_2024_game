@@ -100,7 +100,7 @@ export default class Hero extends Circle {
     //     : sprites[this.status];
   }
 
-  move(limits, key) {
+  move(areaLimitada, key) {
     //console.log("Key: ", key);
     let movements = {
       down: {
@@ -130,15 +130,24 @@ export default class Hero extends Circle {
     this.y = movements[this.status].y;
 
     this.updateHit();
-    this.limits(limits);
+    this.limits(areaLimitada);
   }
 
-  limits(limits) {
-    this.x = this.x - this.size > limits.width ? -this.size : this.x;
-    this.x = this.x + this.size < 0 ? limits.width - this.size : this.x;
-    this.y =
-      this.y - this.size > limits.height + this.size ? -this.size : this.y;
-    this.y = this.y + this.size < 0 ? limits.height + this.size : this.y;
+  limits(areaDoCanvas) {
+    let offX = 82;
+    let offY = 85;
+    if (this.x < 0) {
+      this.x = 0;
+    }
+    if (this.x + (this.size + offX) > areaDoCanvas.width) {
+      this.x = areaDoCanvas.width - this.size - offX;
+    }
+    if (this.y < 0) {
+      this.y = 0;
+    }
+    if (this.y + this.size + offY > areaDoCanvas.height) {
+      this.y = areaDoCanvas.height - this.size - offY;
+    }
   }
 
   updateHit() {
