@@ -23,6 +23,7 @@ export default class Hero extends Circle {
     this.status = "stopped";
     this.statusAux = 0;
     this.isStopped = true;
+    this.shooted = false;
 
     this.hit = new Circle(
       this.x + this.width / 2,
@@ -31,6 +32,21 @@ export default class Hero extends Circle {
       0,
       "rgba(0,0,255,.5)"
     );
+    
+    //Bullet
+    let bulletSize = 5;
+    let bulletColor = "rgba(0,255,0,.9)";
+    this.bullet = {
+      circ: new Circle(
+        this.x + this.width / 2,
+        this.y + this.height / 2,
+        bulletSize,
+        0,
+        bulletColor
+      ),
+      speed: 5,
+      status:false,
+    }
 
     this.animeSprite(FRAMES);
     this.setControls();
@@ -94,11 +110,8 @@ export default class Hero extends Circle {
     } else {
       this.cellY = sprites[this.status];
     }
-    // this.cellY =
-    //   sprites[this.status] !== undefined
-    //     ? sprites[this.status]
-    //     : sprites[this.status];
   }
+
 
   move(areaLimitada, key) {
     //console.log("Key: ", key);
@@ -133,6 +146,12 @@ export default class Hero extends Circle {
     this.updateHit();
     this.limits(areaLimitada);
   }
+
+  shoot(CTX){
+    this.bullet.circ.draw(CTX);
+    console.log("TIRO");
+    
+    }
 
   limits(areaDoCanvas) {
     let offX = 82;

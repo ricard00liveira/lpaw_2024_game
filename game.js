@@ -2,7 +2,7 @@
 import { keyPress, key, activeKeys } from "./keyboard";
 import Hero from "./Hero";
 import { loadImage } from "./loaderAssets";
-import { life, imprimirLife } from "./hud";
+import { imprimirLife } from "./hud";
 //import redCircle from "./geometries/redCirc";
 
 let CTX;
@@ -30,6 +30,7 @@ let boundaries;
 let bgImage;
 let bgPattern;
 let hubSize = 30;
+let canShoot = true;
 
 const game = async () => {
   console.log("Initialize Canvas");
@@ -79,6 +80,11 @@ const loop = () => {
     }
 
     hero.move(boundaries, key);
+    if(key == ' ' && canShoot == true) {
+      canShoot = false;
+      hero.shoot(CTX);
+      canShoot = true;
+    }
     hero.draw(CTX);
     // enemies.forEach((e) => {
     //   e.move(boundaries, 0);
