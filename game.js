@@ -1,5 +1,5 @@
 //import Enemy from "./Enemy";
-import { keyPress, key } from "./keyboard";
+import { keyPress, key, activeKeys } from "./keyboard";
 import Hero from "./Hero";
 import { loadImage } from "./loaderAssets";
 //import redCircle from "./geometries/redCirc";
@@ -13,10 +13,10 @@ const FRAMES = 60;
 //let enemies = Array.from({ length: qtdEnemies });
 
 const hero = new Hero(
-  50,
-  50,
+  51,
+  51,
   20,
-  0.65,
+  1,
   102,
   102,
   "/sprite_char_transparente.png",
@@ -34,8 +34,8 @@ const game = async () => {
   CANVAS = document.querySelector("canvas");
   CTX = CANVAS.getContext("2d");
   boundaries = {
-    width: CANVAS.width + 5,
-    height: CANVAS.height + 5,
+    width: CANVAS.width,
+    height: CANVAS.height,
   };
 
   // Carregar a imagem de fundo
@@ -54,11 +54,14 @@ const game = async () => {
   // );
 
   keyPress(window);
+
   loop();
 };
 
 const loop = () => {
   setTimeout(() => {
+    //console.log("Key: ", key);
+    //console.log("Array Keys: ", activeKeys);
     CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
 
     // redCircle(CTX);

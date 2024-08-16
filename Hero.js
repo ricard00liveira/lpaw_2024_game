@@ -7,7 +7,7 @@ export default class Hero extends Circle {
     this.imgUrl = imgUrl;
     loadImage(this.imgUrl).then((img) => {
       this.img = img;
-      this.cellWidth = img.naturalWidth / this.totalSprites + 1;
+      this.cellWidth = img.naturalWidth / this.totalSprites + 0.5;
       console.log("W:" + this.cellWidth);
     });
 
@@ -20,7 +20,8 @@ export default class Hero extends Circle {
     this.width = width;
     this.height = height;
 
-    this.status = "right";
+    this.status = "stopped";
+    this.statusAux = 0;
     this.isStopped = true;
 
     this.hit = new Circle(
@@ -56,8 +57,10 @@ export default class Hero extends Circle {
   animeSprite(FRAMES) {
     //Controla a animacao do sprite
     setInterval(() => {
-      if (!this.isStopped) {
+      if (this.status != "stopped") {
         this.cellX = this.cellX < this.totalSprites - 1 ? this.cellX + 1 : 0;
+      } else {
+        this.cellX = 0;
       }
     }, 1000 / ((FRAMES * this.spriteSpeed) / 10));
   }
@@ -68,7 +71,7 @@ export default class Hero extends Circle {
       w: "up",
       a: "left",
       d: "right",
-      " ": "stopped"
+      //x: "stopped",
     };
   }
 
@@ -78,32 +81,53 @@ export default class Hero extends Circle {
       up: 2,
       left: 3,
       right: 1,
+      stopped: this.statusAux,
     };
 
-    this.cellY = sprites[this.status] !== undefined ? sprites[this.status] : sprites[this.status];
+    if (sprites[this.status] !== undefined) {
+      if (sprites[this.status] == "stopped") {
+        this.cellY = sprites[this.statusAux];
+      } else {
+        this.cellY = sprites[this.status];
+        this.statusAux = sprites[this.status];
+      }
+    } else {
+      this.cellY = sprites[this.status];
+    }
+    // this.cellY =
+    //   sprites[this.status] !== undefined
+    //     ? sprites[this.status]
+    //     : sprites[this.status];
   }
 
   move(limits, key) {
-    if (key === " ") {
-      this.isStopped = true;
-      //this.status = "stopped";
-    } else {
-      this.isStopped = false;
-      this.status = this.controls[key] ? this.controls[key] : this.status;
-    }
-
+    //console.log("Key: ", key);
     let movements = {
-      down: {x: this.x, y: this.y + this.speed, },
+      down: {
+        x: this.x,
+        y: this.y + this.speed,
+      },
       up: { x: this.x, y: this.y - this.speed },
       left: { x: this.x - this.speed, y: this.y },
       right: { x: this.x + this.speed, y: this.y },
-      stopped: { x: this.x, y: this.y }
+      stopped: { x: this.x, y: this.y },
     };
-
-    if (!this.isStopped) {
-      this.x = movements[this.status].x;
-      this.y = movements[this.status].y;
+    if (key != null) {
+      if (this.controls[key]) {
+        this.status = this.controls[key];
+      } else {
+        this.status = this.status;
+      }
+    } else {
+      this.status = "stopped";
     }
+
+    // this.status = this.controls[key] ? this.controls[key] : this.status;
+
+    //console.log("Status: ", this.status, " - statusAux: ", this.statusAux); //Mostra this.status e this.statusAux;
+
+    this.x = movements[this.status].x;
+    this.y = movements[this.status].y;
 
     this.updateHit();
     this.limits(limits);
