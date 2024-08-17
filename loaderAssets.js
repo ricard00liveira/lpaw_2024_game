@@ -9,4 +9,29 @@ const loadImage = async (url) =>
     //console.log("loading img: " + url);
   });
 
-export { loadImage };
+const loadAudio = async (path) => {
+  return new Promise((resolve, reject) => {
+    const timeoutDuration = 300;
+    const audio = new Audio(path);
+    console.log("Loading audio...");
+
+    const onCanPlay = () => {
+      console.log("Audio loaded: " + path);
+      clearTimeout(timeout);
+      resolve(audio);
+    };
+
+    const timeout = setTimeout(() => {
+      audio.removeEventListener("canplay", onCanPlay);
+      reject(
+        new Error(
+          `Áudio demorou mais que ${timeoutDuration} milisegundos. ERRO!`
+        )
+      );
+    }, timeoutDuration);
+
+    audio.addEventListener("canplay", onCanPlay);
+  });
+};
+
+export { loadImage, loadAudio };

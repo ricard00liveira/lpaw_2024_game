@@ -23,7 +23,10 @@ export default class Hero extends Circle {
     this.status = "stopped";
     this.statusAux = 0;
     this.isStopped = true;
-    this.shooted = false;
+    //this.shooted = false;
+    this.bullets = [];
+    this.invulnerable = false; // Flag de invulnerabilidade
+    this.invulnerabilityDuration = 100;
 
     this.hit = new Circle(
       this.x + this.width / 2,
@@ -32,21 +35,6 @@ export default class Hero extends Circle {
       0,
       "rgba(0,0,255,.5)"
     );
-    
-    //Bullet
-    let bulletSize = 5;
-    let bulletColor = "rgba(0,255,0,.9)";
-    this.bullet = {
-      circ: new Circle(
-        this.x + this.width / 2,
-        this.y + this.height / 2,
-        bulletSize,
-        0,
-        bulletColor
-      ),
-      speed: 5,
-      status:false,
-    }
 
     this.animeSprite(FRAMES);
     this.setControls();
@@ -66,6 +54,9 @@ export default class Hero extends Circle {
       this.width,
       this.height
     );
+
+    this.bullets.forEach((bullet) => bullet.draw(CTX));
+
     //descomentar para ver a area de hit
     //this.hit.draw(CTX);
   }
@@ -78,7 +69,6 @@ export default class Hero extends Circle {
       } else {
         this.cellX = 0;
       }
-      
     }, 1000 / ((FRAMES * this.spriteSpeed) / 10));
   }
 
@@ -112,7 +102,6 @@ export default class Hero extends Circle {
       this.cellY = sprites[this.status];
     }
   }
-
 
   move(areaLimitada, key) {
     //console.log("Key: ", key);
@@ -148,11 +137,50 @@ export default class Hero extends Circle {
     this.limits(areaLimitada);
   }
 
-  shoot(CTX){
-    this.updateBullet();
-    this.bullet.circ.draw(CTX);
-    console.log("TIRO");
+  shoot() {
+    let bulletSpeed = 5;
+    let bulletSize = 5;
+    let bulletDirection = { x: 0, y: 0 };
+
+    switch (this.statusAux) {
+      case 0:
+        bulletDirection.y = bulletSpeed;
+        break;
+      case 2:
+        bulletDirection.y = -bulletSpeed;
+        break;
+      case 3:
+        bulletDirection.x = -bulletSpeed;
+        break;
+      case 1:
+        bulletDirection.x = bulletSpeed;
+        break;
     }
+
+    let bullet = new Circle(
+      this.x + this.width / 2,
+      this.y + this.height / 2,
+      bulletSize,
+      bulletSpeed,
+      "rgba(0,100,255,.5)"
+    );
+    bullet.direction = bulletDirection;
+    this.bullets.push(bullet);
+  }
+
+  updateBullets(boundaries) {
+    this.bullets = this.bullets.filter((bullet) => {
+      bullet.x += bullet.direction.x;
+      bullet.y += bullet.direction.y;
+
+      return (
+        bullet.x > 0 &&
+        bullet.x < boundaries.width &&
+        bullet.y > 0 &&
+        bullet.y < boundaries.height
+      );
+    });
+  }
 
   limits(areaDoCanvas) {
     let offX = 82;
@@ -174,10 +202,6 @@ export default class Hero extends Circle {
   updateHit() {
     this.hit.x = this.x + this.width / 2;
     this.hit.y = this.y + this.height / 2;
-  }
-  updateBullet() {
-    this.bullet.circ.x = this.x + this.width / 2;
-    this.bullet.circ.y = this.y + this.height / 2;
   }
 
   colide(other) {
