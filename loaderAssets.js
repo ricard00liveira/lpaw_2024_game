@@ -11,7 +11,7 @@ const loadImage = async (url) =>
 
 const loadAudio = async (path) => {
   return new Promise((resolve, reject) => {
-    const timeoutDuration = 300;
+    const timeoutDuration = 5000;
     const audio = new Audio(path);
     console.log("Loading audio...");
 
