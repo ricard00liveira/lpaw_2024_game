@@ -1,9 +1,10 @@
 import Circle from "./geometries/Circle";
 
 export default class Enemy extends Circle {
-  constructor(x, y, size, speed = 5, color = "#00f") {
+  constructor(x, y, size, speed = 5, color = "#00f", id) {
     super(x, y, size, speed, color);
     this.line = 1;
+    this.id = id;
     // console.log('enemy',this)
   }
 

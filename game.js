@@ -18,9 +18,9 @@ let CANVAS;
 let soundColide;
 let soundGameOver;
 const FRAMES = 60;
-const qtdEnemies = 1;
+const qtdEnemies = 5;
 
-let enemies = Array.from({ length: qtdEnemies });
+let enemies;
 const hero = new Hero(
   300,
   300,
@@ -40,7 +40,7 @@ let bgPattern;
 const hubSize = 30;
 let canShoot = true;
 let invulnerable = false; // Flag de invulnerabilidade
-const invulnerabilityDuration = 700;
+const invulnerabilityDuration = 100;
 const danoColide = 10;
 
 function takeDamage(amount) {
@@ -62,6 +62,16 @@ function reloadGun() {
   setTimeout(() => {
     canShoot = true;
   }, 250);
+}
+
+function removeEnemyById(id) {
+  enemies = enemies.filter((enemy) => enemy.id !== id);
+}
+
+function addEnemy(x, y, size, speed, color, id) {
+  const newEnemy = new Enemy(x, y, size, speed, color, id);
+  enemies.push(newEnemy);
+  takeDamage(danoColide);
 }
 
 const game = async () => {
@@ -94,14 +104,16 @@ const game = async () => {
   bgPattern = CTX.createPattern(bgImage, "repeat");
 
   // Inicializar inimigos
-  enemies = enemies.map(
-    () =>
+  enemies = Array.from(
+    { length: qtdEnemies },
+    (_, index) =>
       new Enemy(
         Math.random() * CANVAS.width,
         Math.random() * CANVAS.height,
         10,
         2,
-        "red"
+        "red",
+        index
       )
   );
 
@@ -133,8 +145,8 @@ const loop = () => {
 
       if (hero.colide(enemy)) {
         // Remove o inimigo da lista quando colidir com o herói
-        enemies.splice(enemy, 1);
-        takeDamage(danoColide);
+        removeEnemyById(enemy.id);
+        addEnemy(Math.random() * CANVAS.width, -5, 10, 2, "green", enemy.id);
         if (heroLife <= 0) {
           soundGameOver.play();
           imprimirHud(hubSize, "rgb(255,0,0,1)");
