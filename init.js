@@ -5,12 +5,13 @@ import { game } from "./game";
 const init = async () => {
   document.body.style.backgroundColor = "#000000";
   document.querySelector(".loading").style.color = "#FFFFFF";
-  await preload();
-  // document.querySelector(".game-title").style.display = "none";
-  // document.querySelector(".loading").style.display = "none";
-  // document.querySelector(".game-footer").style.display = "none";
-  // document.querySelector(".game-container").style.display = "flex";
-  setTimeout(game, 9000);
+  // await preload();
+  document.querySelector(".game-title").style.display = "none";
+  document.querySelector(".loading").style.display = "none";
+  document.querySelector(".game-footer").style.display = "none";
+  document.querySelector(".game-container").style.display = "flex";
+  //setTimeout(game, 9000);
+  game();
   //   startLoadingAnimation();
 
   // const canvas = document.getElementById("gameCanvas");

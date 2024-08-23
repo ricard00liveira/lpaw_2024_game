@@ -18,7 +18,7 @@ let CANVAS;
 let soundColide;
 let soundGameOver;
 const FRAMES = 60;
-const qtdEnemies = 15;
+const qtdEnemies = 1;
 
 let enemies = Array.from({ length: qtdEnemies });
 const hero = new Hero(
@@ -56,6 +56,12 @@ function takeDamage(amount) {
       invulnerable = false;
     }, invulnerabilityDuration);
   }
+}
+
+function reloadGun() {
+  setTimeout(() => {
+    canShoot = true;
+  }, 250);
 }
 
 const game = async () => {
@@ -126,6 +132,8 @@ const loop = () => {
       enemy.draw(CTX);
 
       if (hero.colide(enemy)) {
+        // Remove o inimigo da lista quando colidir com o herói
+        enemies.splice(enemy, 1);
         takeDamage(danoColide);
         if (heroLife <= 0) {
           soundGameOver.play();
@@ -142,6 +150,7 @@ const loop = () => {
       hero.shoot(CTX);
       console.log(hero.bullets);
       canShoot = false;
+      reloadGun();
     }
 
     if (gameover) {
