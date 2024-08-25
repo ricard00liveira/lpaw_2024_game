@@ -58,7 +58,7 @@ export default class Hero extends Circle {
     this.bullets.forEach((bullet) => bullet.draw(CTX));
 
     //descomentar para ver a area de hit
-    this.hit.draw(CTX);
+    //this.hit.draw(CTX);
   }
 
   animeSprite(FRAMES) {

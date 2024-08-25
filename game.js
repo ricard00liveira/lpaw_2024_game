@@ -1,5 +1,5 @@
 import Enemy from "./Enemy";
-import { keyPress, key, activeKeys } from "./keyboard";
+import { keyPress, key } from "./keyboard";
 import Hero from "./Hero";
 import { loadImage, loadAudio } from "./loaderAssets";
 import {
@@ -20,9 +20,9 @@ let soundGameOver;
 const FRAMES = 60;
 
 //Enemy
-const qtdEnemies = 10;
+const qtdEnemies = 4;
 const speedEnemies = 5;
-const sizeEnemies = 15;
+const sizeEnemies = 13; //Área do colide (hitbox)
 const baseDano = 5;
 let danoColide;
 let enemies;
@@ -45,7 +45,7 @@ let bgPattern;
 const hubSize = 30;
 let canShoot = true;
 let invulnerable = false; // Flag de invulnerabilidade
-const invulnerabilityDuration = 100;
+const invulnerabilityDuration = 50;
 
 function takeDamage(amount) {
   if (!invulnerable) {
@@ -53,7 +53,6 @@ function takeDamage(amount) {
       soundColide.play();
     }
     heroLife -= amount;
-
     invulnerable = true;
 
     setTimeout(() => {
@@ -153,7 +152,7 @@ const game = async () => {
         100,
         35,
         "/fireball_game_shoot.png",
-        FRAMES
+        FRAMES + 20
       )
   );
 
@@ -182,7 +181,7 @@ const loop = () => {
       enemy.move(boundaries);
       enemy.draw(CTX);
 
-      if (hero.colide(enemy)) {
+      if (hero.colide(enemy.hit)) {
         // Remove o inimigo da lista quando colidir com o herói
         removeEnemyById(enemy.id);
         addEnemy(
@@ -209,12 +208,12 @@ const loop = () => {
 
     hero.updateBullets(boundaries);
 
-    if (key === " " && canShoot) {
-      hero.shoot(CTX);
-      console.log(hero.bullets);
-      canShoot = false;
-      reloadGun();
-    }
+    // if (key === " " && canShoot) {
+    //   hero.shoot(CTX);
+    //   console.log(hero.bullets);
+    //   canShoot = false;
+    //   reloadGun();
+    // }
 
     if (gameover) {
       stopCounter();

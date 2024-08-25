@@ -24,15 +24,6 @@ export default class Enemy extends Circle {
     this.cellX = 0; // Controla o frame atual da animação
     this.cellY = 0; // Fixo, pois estamos lidando com uma coluna de sprites
 
-    loadImage(this.imgUrl).then((img) => {
-      this.img = img;
-      this.cellWidth = img.naturalWidth; // Largura de cada sprite
-      this.cellHeight = img.naturalHeight / this.totalSprites; // Altura de cada sprite
-      console.log(
-        "Sprite Width:" + this.cellWidth + " | Sprite Height:" + this.cellHeight
-      );
-    });
-
     this.hit = new Circle(
       this.x + this.width / 2,
       this.y + this.height / 2,
@@ -65,7 +56,22 @@ export default class Enemy extends Circle {
         break;
     }
 
-    this.animeSprite(FRAMES);
+    this.init(FRAMES); // Chama a função assíncrona para carregar a imagem
+  }
+
+  async init(FRAMES) {
+    try {
+      this.img = await loadImage(this.imgUrl);
+      this.cellWidth = this.img.naturalWidth; // Largura de cada sprite
+      this.cellHeight = this.img.naturalHeight / this.totalSprites; // Altura de cada sprite
+      //console.log(
+      //  "Sprite Width:" + this.cellWidth + " | Sprite Height:" + this.cellHeight
+      //);
+
+      this.animeSprite(FRAMES); // Inicia a animação do sprite após o carregamento
+    } catch (error) {
+      console.error("Erro ao carregar a imagem:", error);
+    }
   }
 
   draw(CTX) {
@@ -104,10 +110,8 @@ export default class Enemy extends Circle {
       this.height // Altura para desenhar no canvas
     );
 
-    // Restaura o contexto ao estado original
     CTX.restore();
-
-    //this.hit.draw(CTX); // Descomente para ver a área de hit
+    //this.hit.draw(CTX);
   }
 
   animeSprite(FRAMES) {
@@ -166,8 +170,29 @@ export default class Enemy extends Circle {
         break;
     }
   }
+
   updateHit() {
-    this.hit.x = this.x + this.width / 2;
-    this.hit.y = this.y + this.height / 2;
+    switch (this.direction) {
+      case "down":
+        this.hit.x = this.x + this.width / 2;
+        this.hit.y = this.y + this.height / 2 + 30;
+        break;
+      case "up":
+        this.hit.x = this.x + this.width / 2;
+        this.hit.y = this.y + this.height / 2 - 30;
+        break;
+      case "left":
+        this.hit.x = this.x + this.width / 2 - 30;
+        this.hit.y = this.y + this.height / 2;
+        break;
+      case "right":
+        this.hit.x = this.x + this.width / 2 + 30;
+        this.hit.y = this.y + this.height / 2;
+        break;
+      default:
+        this.hit.x = this.x + this.width / 2;
+        this.hit.y = this.y + this.height / 2;
+        break;
+    }
   }
 }
