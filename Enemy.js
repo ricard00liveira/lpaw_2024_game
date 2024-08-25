@@ -69,6 +69,9 @@ export default class Enemy extends Circle {
   }
 
   draw(CTX) {
+    if (!this.img) {
+      return; // Se a imagem ainda não foi carregada, sai do método
+    }
     CTX.save();
     CTX.translate(this.x + this.width / 2, this.y + this.height / 2);
 
