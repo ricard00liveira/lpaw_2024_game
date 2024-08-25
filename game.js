@@ -18,8 +18,13 @@ let CANVAS;
 let soundColide;
 let soundGameOver;
 const FRAMES = 60;
-const qtdEnemies = 5;
 
+//Enemy
+const qtdEnemies = 10;
+const speedEnemies = 5;
+const sizeEnemies = 15;
+const baseDano = 5;
+let danoColide;
 let enemies;
 const hero = new Hero(
   300,
@@ -41,7 +46,6 @@ const hubSize = 30;
 let canShoot = true;
 let invulnerable = false; // Flag de invulnerabilidade
 const invulnerabilityDuration = 100;
-const danoColide = 10;
 
 function takeDamage(amount) {
   if (!invulnerable) {
@@ -68,9 +72,16 @@ function removeEnemyById(id) {
   enemies = enemies.filter((enemy) => enemy.id !== id);
 }
 
-function addEnemy(x, y, size, speed, color, id) {
-  const newEnemy = new Enemy(x, y, size, speed, color, id);
+function calculoDano(danoBase, tempo) {
+  let resultado = danoBase + Math.ceil(tempo / 10);
+  console.log("Dano: ", resultado);
+  return resultado;
+}
+
+function addEnemy(x, y, limitX, limitY, size, speed, color, id) {
+  const newEnemy = new Enemy(x, y, limitX, limitY, size, speed, color, id);
   enemies.push(newEnemy);
+  danoColide = calculoDano(baseDano, seconds);
   takeDamage(danoColide);
 }
 
@@ -108,10 +119,12 @@ const game = async () => {
     { length: qtdEnemies },
     (_, index) =>
       new Enemy(
-        Math.random() * CANVAS.width,
-        Math.random() * CANVAS.height,
-        10,
-        2,
+        0,
+        0,
+        CANVAS.width,
+        CANVAS.height,
+        sizeEnemies,
+        speedEnemies,
         "red",
         index
       )
@@ -126,15 +139,14 @@ const game = async () => {
 const loop = () => {
   setTimeout(() => {
     CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
+    imprimirHud(hubSize);
+    imprimirLife(15, CANVAS.height - 7, heroLife);
+    imprimirTempo(700, CANVAS.height - 7);
 
     if (bgPattern) {
       CTX.fillStyle = bgPattern;
       CTX.fillRect(0, 0, CANVAS.width, CANVAS.height - hubSize);
     }
-
-    imprimirHud(hubSize);
-    imprimirLife(15, CANVAS.height - 7, heroLife);
-    imprimirTempo(700, CANVAS.height - 7);
 
     hero.move(boundaries, key);
     hero.draw(CTX);
@@ -146,7 +158,16 @@ const loop = () => {
       if (hero.colide(enemy)) {
         // Remove o inimigo da lista quando colidir com o herói
         removeEnemyById(enemy.id);
-        addEnemy(Math.random() * CANVAS.width, -5, 10, 2, "green", enemy.id);
+        addEnemy(
+          0,
+          0,
+          CANVAS.width,
+          CANVAS.height,
+          sizeEnemies,
+          speedEnemies,
+          "orange",
+          enemy.id
+        );
         if (heroLife <= 0) {
           soundGameOver.play();
           imprimirHud(hubSize, "rgb(255,0,0,1)");
@@ -168,7 +189,7 @@ const loop = () => {
     if (gameover) {
       stopCounter();
       console.error("Game Over!!!");
-      cancelAnimationFrame(anime);
+
       const question = confirm(
         "Você perdeu, mas durou " +
           seconds +
@@ -177,6 +198,7 @@ const loop = () => {
       if (question) {
         window.location.reload(true);
       }
+      cancelAnimationFrame(anime);
     } else {
       anime = requestAnimationFrame(loop);
     }
