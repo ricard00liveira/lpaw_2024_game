@@ -27,8 +27,8 @@ const baseDano = 5;
 let danoColide;
 let enemies;
 const hero = new Hero(
-  300,
-  300,
+  350,
+  225,
   20,
   5,
   75,
@@ -78,8 +78,32 @@ function calculoDano(danoBase, tempo) {
   return resultado;
 }
 
-function addEnemy(x, y, limitX, limitY, size, speed, color, id) {
-  const newEnemy = new Enemy(x, y, limitX, limitY, size, speed, color, id);
+function addEnemy(
+  x,
+  y,
+  limitX,
+  limitY,
+  size,
+  speed,
+  id,
+  tamX,
+  tamY,
+  url,
+  FRAMES
+) {
+  const newEnemy = new Enemy(
+    x,
+    y,
+    limitX,
+    limitY,
+    size,
+    speed,
+    id,
+    tamX,
+    tamY,
+    url,
+    FRAMES
+  );
   enemies.push(newEnemy);
   danoColide = calculoDano(baseDano, seconds);
   takeDamage(danoColide);
@@ -125,8 +149,11 @@ const game = async () => {
         CANVAS.height,
         sizeEnemies,
         speedEnemies,
-        "red",
-        index
+        index,
+        100,
+        35,
+        "/fireball_game_shoot.png",
+        FRAMES
       )
   );
 
@@ -165,8 +192,11 @@ const loop = () => {
           CANVAS.height,
           sizeEnemies,
           speedEnemies,
-          "orange",
-          enemy.id
+          enemy.id,
+          100,
+          35,
+          "/fireball_game_shoot.png",
+          FRAMES
         );
         if (heroLife <= 0) {
           soundGameOver.play();
@@ -188,7 +218,7 @@ const loop = () => {
 
     if (gameover) {
       stopCounter();
-      console.error("Game Over!!!");
+      //console.error("Game Over!!!");
 
       const question = confirm(
         "Você perdeu, mas durou " +
