@@ -1,31 +1,20 @@
 import Circle from "./geometries/Circle";
-import { loadImage } from "./loaderAssets";
+import { imgHero, soundShoot } from "./preload";
 
 export default class Hero extends Circle {
-  constructor(x, y, size, speed = 1, width, height, imgUrl, FRAMES) {
+  constructor(x, y, size, speed = 1, width, height, FRAMES) {
     super(x, y, size, speed);
-    this.imgUrl = imgUrl;
-    loadImage(this.imgUrl).then((img) => {
-      this.img = img;
-      this.cellWidth = img.naturalWidth / this.totalSprites + 0.5;
-      console.log("W:" + this.cellWidth);
-    });
-
-    this.cellHeight = 51;
-    this.cellX = 0;
-    this.totalSprites = 3;
-    this.spriteSpeed = 1;
-    console.log("H:" + this.cellHeight);
-
     this.width = width;
     this.height = height;
-
+    this.totalSprites = 3;
+    this.spriteSpeed = 1;
+    this.cellX = 0;
+    this.cellY = 0;
     this.status = "stopped";
     this.statusAux = 0;
     this.isStopped = true;
-    //this.shooted = false;
     this.bullets = [];
-    this.invulnerable = false; // Flag de invulnerabilidade
+    this.invulnerable = false;
     this.invulnerabilityDuration = 100;
 
     this.hit = new Circle(
@@ -36,8 +25,22 @@ export default class Hero extends Circle {
       "rgba(0,0,255,.5)"
     );
 
-    this.animeSprite(FRAMES);
+    this.init(FRAMES); // Inicializa o carregamento da imagem e animação
     this.setControls();
+  }
+
+  async init(FRAMES) {
+    try {
+      if (!imgHero) {
+        throw new Error("imgHero não está carregado! Verifique o preload.");
+      }
+      this.img = imgHero;
+      this.cellWidth = this.img.naturalWidth / this.totalSprites + 0.5;
+      this.cellHeight = 51;
+      this.animeSprite(FRAMES);
+    } catch (error) {
+      console.error("Erro ao inicializar o Hero:", error);
+    }
   }
 
   draw(CTX) {
@@ -57,8 +60,8 @@ export default class Hero extends Circle {
 
     this.bullets.forEach((bullet) => bullet.draw(CTX));
 
-    //descomentar para ver a area de hit
-    //this.hit.draw(CTX);
+    // Descomentar para ver a área de hit
+    // this.hit.draw(CTX);
   }
 
   animeSprite(FRAMES) {
@@ -78,7 +81,6 @@ export default class Hero extends Circle {
       w: "up",
       a: "left",
       d: "right",
-      //x: "stopped",
     };
   }
 
@@ -104,31 +106,19 @@ export default class Hero extends Circle {
   }
 
   move(areaLimitada, key) {
-    //console.log("Key: ", key);
-    let movements = {
-      down: {
-        x: this.x,
-        y: this.y + this.speed,
-      },
+    const movements = {
+      down: { x: this.x, y: this.y + this.speed },
       up: { x: this.x, y: this.y - this.speed },
       left: { x: this.x - this.speed, y: this.y },
       right: { x: this.x + this.speed, y: this.y },
       stopped: { x: this.x, y: this.y },
     };
 
-    if (key != null) {
-      if (this.controls[key]) {
-        this.status = this.controls[key];
-      } else {
-        this.status = this.status;
-      }
+    if (key != null && this.controls[key]) {
+      this.status = this.controls[key];
     } else {
       this.status = "stopped";
     }
-
-    // this.status = this.controls[key] ? this.controls[key] : this.status;
-
-    //console.log("Status: ", this.status, " - statusAux: ", this.statusAux); //Mostra this.status e this.statusAux;
 
     this.x = movements[this.status].x;
     this.y = movements[this.status].y;
@@ -138,10 +128,12 @@ export default class Hero extends Circle {
   }
 
   shoot() {
-    let bulletSpeed = 5;
-    let bulletSize = 5;
-    let bulletDirection = { x: 0, y: 0 };
-
+    const bulletSpeed = 5;
+    const bulletSize = 5;
+    const bulletDirection = { x: 0, y: 0 };
+    if (soundShoot) {
+      soundShoot.play();
+    }
     switch (this.statusAux) {
       case 0:
         bulletDirection.y = bulletSpeed;
@@ -157,7 +149,7 @@ export default class Hero extends Circle {
         break;
     }
 
-    let bullet = new Circle(
+    const bullet = new Circle(
       this.x + this.width / 2,
       this.y + this.height / 2,
       bulletSize,
@@ -183,12 +175,12 @@ export default class Hero extends Circle {
   }
 
   limits(areaDoCanvas) {
-    let offX = 82;
-    let offY = 85;
+    const offX = 60;
+    const offY = 60;
     if (this.x < 0) {
       this.x = 0;
     }
-    if (this.x + (this.size + offX) > areaDoCanvas.width) {
+    if (this.x + this.size + offX > areaDoCanvas.width) {
       this.x = areaDoCanvas.width - this.size - offX;
     }
     if (this.y < 0) {

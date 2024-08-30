@@ -1,4 +1,4 @@
-let CANVAS = document.querySelector("canvas");
+let CANVAS = document.getElementById("gameCanvas");
 let CTX = CANVAS.getContext("2d");
 let seconds = 0;
 let intervalId;
@@ -33,6 +33,7 @@ function imprimirGameOver(posX, posY) {
 }
 
 function imprimirHud(size, color = "#333333") {
+  //console.log("Canvas HUD = w: " + CANVAS.width + ", h: " + CANVAS.height);
   CTX.fillStyle = color;
   CTX.fillRect(0, CANVAS.height - size, CANVAS.width, CANVAS.height);
 }

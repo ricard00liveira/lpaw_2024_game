@@ -16,6 +16,7 @@ html {
   align-items: center;
   /* background: url('/src/background.webp') no-repeat center center fixed; */
   background-size: cover;
+  background-color: #000000;
 }
 
 .loading {
@@ -23,6 +24,7 @@ html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  color: #ffffff;
 }
 
 .game-container {

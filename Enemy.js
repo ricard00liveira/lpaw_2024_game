@@ -1,5 +1,5 @@
 import Circle from "./geometries/Circle";
-import { loadImage } from "./loaderAssets";
+import { imgEnemy } from "./preload";
 
 export default class Enemy extends Circle {
   constructor(
@@ -12,17 +12,15 @@ export default class Enemy extends Circle {
     id,
     width,
     height,
-    imgUrl,
     FRAMES
   ) {
     super(x, y, size, speed);
-    this.imgUrl = imgUrl;
     this.width = width;
     this.height = height;
     this.totalSprites = 6; // Número total de sprites na imagem
     this.spriteSpeed = 1;
-    this.cellX = 0; // Controla o frame atual da animação
-    this.cellY = 0; // Fixo, pois estamos lidando com uma coluna de sprites
+    this.cellX = 0;
+    this.cellY = 0;
 
     this.hit = new Circle(
       this.x + this.width / 2,
@@ -61,7 +59,7 @@ export default class Enemy extends Circle {
 
   async init(FRAMES) {
     try {
-      this.img = await loadImage(this.imgUrl);
+      this.img = imgEnemy;
       this.cellWidth = this.img.naturalWidth; // Largura de cada sprite
       this.cellHeight = this.img.naturalHeight / this.totalSprites; // Altura de cada sprite
       //console.log(
@@ -100,14 +98,14 @@ export default class Enemy extends Circle {
     // Desenha a imagem, ajustando as coordenadas de acordo com a rotação
     CTX.drawImage(
       this.img,
-      0, // X do recorte (fixo porque as sprites estão em uma única coluna)
-      this.cellX * this.cellHeight, // Y do recorte (ajustado pelo frame atual)
-      this.cellWidth, // Largura do recorte
-      this.cellHeight, // Altura do recorte
-      -this.width / 2, // Ajusta para o ponto de origem do objeto (centro)
-      -this.height / 2, // Ajusta para o ponto de origem do objeto (centro)
-      this.width, // Largura para desenhar no canvas
-      this.height // Altura para desenhar no canvas
+      0,
+      this.cellX * this.cellHeight,
+      this.cellWidth,
+      this.cellHeight,
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height
     );
 
     CTX.restore();
@@ -142,7 +140,7 @@ export default class Enemy extends Circle {
   limits(limits) {
     switch (this.direction) {
       case "down":
-        if (this.y - this.size >= limits.height - 30) {
+        if (this.y - this.size >= limits.height - 50) {
           this.y = -2 * this.size;
           this.x = Math.random() * limits.width;
         }
@@ -150,7 +148,7 @@ export default class Enemy extends Circle {
 
       case "up":
         if (this.y + this.size <= 30) {
-          this.y = limits.height + this.size - 30;
+          this.y = limits.height - 30;
           this.x = Math.random() * limits.width;
         }
         break;
