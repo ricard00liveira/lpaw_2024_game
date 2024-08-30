@@ -16,6 +16,7 @@ export default class Hero extends Circle {
     this.bullets = [];
     this.invulnerable = false;
     this.invulnerabilityDuration = 100;
+    this.bulletIdCounter = 0;
 
     this.hit = new Circle(
       this.x + this.width / 2,
@@ -28,7 +29,6 @@ export default class Hero extends Circle {
     this.init(FRAMES); // Inicializa o carregamento da imagem e animação
     this.setControls();
   }
-
   async init(FRAMES) {
     try {
       if (!imgHero) {
@@ -128,8 +128,8 @@ export default class Hero extends Circle {
   }
 
   shoot() {
-    const bulletSpeed = 5;
-    const bulletSize = 5;
+    const bulletSpeed = 7.5;
+    const bulletSize = 10;
     const bulletDirection = { x: 0, y: 0 };
     if (soundShoot) {
       soundShoot.play();
@@ -156,6 +156,7 @@ export default class Hero extends Circle {
       bulletSpeed,
       "rgba(0,100,255,.5)"
     );
+    bullet.id = ++this.bulletIdCounter;
     bullet.direction = bulletDirection;
     this.bullets.push(bullet);
   }

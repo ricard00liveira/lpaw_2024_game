@@ -193,4 +193,10 @@ export default class Enemy extends Circle {
         break;
     }
   }
+  colide(other) {
+    return (
+      this.hit.size + other.size >=
+      Math.sqrt((this.hit.x - other.x) ** 2 + (this.hit.y - other.y) ** 2)
+    );
+  }
 }

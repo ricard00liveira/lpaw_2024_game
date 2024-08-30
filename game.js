@@ -5,7 +5,6 @@ import {
   soundColide,
   soundCollect,
   soundGameOver,
-  soundShoot,
   imgCenario,
 } from "./preload";
 import {
@@ -15,18 +14,22 @@ import {
   stopCounter,
   imprimirHud,
   imprimirGameOver,
+  imprimirShoot,
   seconds,
 } from "./hud";
 const start = async () => {
   const FRAMES = 60;
   const hero = new Hero(350, 225, 20, 5, 75, 75, FRAMES);
+  const maxHeroLife = 100;
   let heroLife = 100;
+  let bulletLifeGain = 10;
   let CTX;
   let CANVAS;
 
   //Enemy
-  const qtdEnemies = 4;
+  const qtdEnemies = 10;
   const speedEnemies = 5;
+  let speedEnemiesNew = speedEnemies + seconds / 10;
   const sizeEnemies = 13; //Área do colide (hitbox)
   const baseDano = 5;
   let danoColide;
@@ -57,11 +60,22 @@ const start = async () => {
   function reloadGun() {
     setTimeout(() => {
       canShoot = true;
-    }, 1000);
+    }, 1250);
   }
 
   function removeEnemyById(id) {
     enemies = enemies.filter((enemy) => enemy.id !== id);
+  }
+  function removeBulletById(id) {
+    hero.bullets = hero.bullets.filter((bullet) => bullet.id !== id);
+  }
+
+  function gainLife(vidaMaxima) {
+    if (heroLife + bulletLifeGain <= 100 && heroLife + bulletLifeGain > 0) {
+      heroLife += bulletLifeGain;
+    } else {
+      heroLife = vidaMaxima;
+    }
   }
 
   function calculoDano(danoBase, tempo) {
@@ -142,6 +156,26 @@ const start = async () => {
         enemy.move(boundaries);
         enemy.draw(CTX);
 
+        hero.bullets.forEach((bullet) => {
+          if (enemy.colide(bullet)) {
+            removeEnemyById(enemy.id);
+            removeBulletById(bullet.id);
+            addEnemy(
+              0,
+              0,
+              CANVAS.width,
+              CANVAS.height,
+              sizeEnemies,
+              speedEnemiesNew,
+              enemy.id,
+              100,
+              35,
+              FRAMES
+            );
+            gainLife(maxHeroLife);
+          }
+        });
+
         if (hero.colide(enemy.hit)) {
           // Remove o inimigo da lista quando colidir com o herói
           removeEnemyById(enemy.id);
@@ -151,32 +185,31 @@ const start = async () => {
             CANVAS.width,
             CANVAS.height,
             sizeEnemies,
-            speedEnemies,
+            speedEnemiesNew,
             enemy.id,
             100,
             35,
             FRAMES
           );
-          if (heroLife < 1) {
-            gameover = true;
-          }
         }
       });
 
       hero.updateBullets(boundaries);
 
       if (key === " " && canShoot) {
+        canShoot = false;
         hero.shoot(CTX);
         console.log(hero.bullets);
-        canShoot = false;
         reloadGun();
       }
-
+      if (heroLife < 1) {
+        gameover = true;
+      }
       if (gameover) {
-        stopCounter();
-        soundGameOver.play();
         imprimirHud(hubSize, "rgb(255,0,0,1)");
         imprimirGameOver(400, CANVAS.height - 12);
+        stopCounter();
+        soundGameOver.play();
 
         const question = confirm(
           "Você perdeu, mas durou " +
@@ -192,6 +225,7 @@ const start = async () => {
         anime = requestAnimationFrame(loop);
         imprimirHud(hubSize);
         imprimirLife(50, CANVAS.height - 11, heroLife);
+        imprimirShoot(400, CANVAS.height - 11, canShoot);
         imprimirTempo(700, CANVAS.height - 11);
       }
     }, 1000 / FRAMES);

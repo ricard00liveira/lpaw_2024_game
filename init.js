@@ -7,19 +7,18 @@ const init = async () => {
   const context = canvas.getContext("2d");
   await document.fonts.load('48pt "MedievalSharp"').then(() => {
     context.drawImage(imgMenu, 0, 0, canvas.width, canvas.height);
-    context.fillStyle = "rgba(0, 0, 0, 0.55)";
+    context.fillStyle = "rgba(0, 0, 0, 0.75)";
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.font = "48px MedievalSharp";
     context.fillStyle = "gold";
     context.textAlign = "center";
     context.textBaseline = "middle";
-
     // Desenhar o texto no canvas
     context.fillText("Bem-vindo ao", canvas.width / 2, 115);
     context.font = "36px MedievalSharp";
     context.fillText("CHRONICLES OF ELDORIA", canvas.width / 2, 150);
     context.font = "24px MedievalSharp";
-    context.fillStyle = "#b9950f";
+    context.fillStyle = "yellow";
     context.fillText("Instruções:", canvas.width / 2, 200);
     context.font = "18px MedievalSharp";
     context.fillText(
@@ -61,7 +60,7 @@ const init = async () => {
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
-    //console.log("x: " + x + ", y: " + y);
+    console.log("x: " + x + ", y: " + y);
     // Verificar se o clique está dentro do botão
     if (
       x > buttonX &&
