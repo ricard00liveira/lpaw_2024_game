@@ -73,3 +73,9 @@ html {
   padding: 2px;
   text-align: center;
 }
+
+#modelContainer {
+  background-color: transparent;
+  width: 150px;
+  height: 150px;
+}

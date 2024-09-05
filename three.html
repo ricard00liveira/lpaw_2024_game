@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visualizador 3D com Textura Difusa</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      // Importando Three.js e OBJLoader
+      import * as THREE from "three";
+      import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
+
+      // Configurar a cena, câmera e renderizador
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        70, // Campo de visão
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      // Adicionar luz ambiente e luz direcional simples
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6); // Luz ambiente
+      scene.add(ambientLight);
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1); // Luz direcional
+      directionalLight.position.set(5, 10, 7.5);
+      scene.add(directionalLight);
+
+      // Carregar a textura difusa (.jpg)
+      const textureLoader = new THREE.TextureLoader();
+      const diffuseTexture = textureLoader.load("/2k_earth_daymap.jpg"); // Caminho para a textura .jpg
+
+      // Variável para armazenar o objeto carregado
+      let earth;
+
+      // Carregar o arquivo .obj
+      const objLoader = new OBJLoader();
+      objLoader.load(
+        "/earth1.obj", // Caminho para o arquivo .obj
+        function (object) {
+          // Aplicar a textura difusa ao material
+          object.traverse(function (child) {
+            if (child.isMesh) {
+              child.material = new THREE.MeshBasicMaterial({
+                map: diffuseTexture, // Aplicar a textura .jpg
+              });
+            }
+          });
+
+          // Ajustar a posição e escala do objeto
+          object.position.set(0, 0, 0); // Centraliza o objeto na cena
+          object.scale.set(1, 1, 1); // Ajuste a escala conforme necessário
+
+          earth = object;
+          scene.add(earth);
+          console.log("Modelo carregado:", earth);
+        },
+        function (xhr) {
+          console.log((xhr.loaded / xhr.total) * 100 + "% carregado");
+        },
+        function (error) {
+          console.error("Erro ao carregar o .obj", error);
+        }
+      );
+
+      // Posição da câmera
+      camera.position.set(0, 0, 25); // Aproxima a câmera do modelo
+
+      // Função de animação
+      function animate() {
+        requestAnimationFrame(animate);
+
+        // Se o objeto earth foi carregado, rotacioná-lo
+        if (earth) {
+          earth.rotation.y += 0.001;
+        }
+
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>
