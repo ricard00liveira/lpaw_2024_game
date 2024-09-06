@@ -97,10 +97,6 @@ const preload = async () => {
                     opacity: [0, 1],
                     duration: 1000,
                     easing: "easeInBack",
-                    complete: () => {
-                      document.getElementById("modelContainer").style.display =
-                        "none";
-                    },
                   });
                 },
               });

@@ -29,8 +29,8 @@ html {
 
 .game-container {
   display: none;
-  width: 600px;
-  height: 400px;
+  width: 800px;
+  height: 600px;
   background: rgba(255, 255, 255, 0.2);
   display: flex;
   justify-content: center;
@@ -70,12 +70,15 @@ html {
   color: white;
   border-radius: 2%;
   margin: 0;
+  margin-top: 30px;
   padding: 2px;
   text-align: center;
 }
 
 #modelContainer {
+  margin: 0;
+  padding: 0;
   background-color: transparent;
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
 }

@@ -56,7 +56,7 @@ function animate() {
   if (earth) {
     earth.rotation.y += 0.001;
   }
-
   renderer.render(scene, camera);
 }
+
 animate();
