@@ -37,10 +37,10 @@ objLoader.load(
 
     earth = object;
     scene.add(earth);
-    console.log("Modelo carregado:", earth);
+    //console.log("Modelo carregado:", earth);
   },
   function (xhr) {
-    console.log((xhr.loaded / xhr.total) * 100 + "% carregado");
+    //console.log((xhr.loaded / xhr.total) * 100 + "% carregado");
   },
   function (error) {
     console.error("Erro ao carregar o .obj", error);

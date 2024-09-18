@@ -1,4 +1,4 @@
-import { preload, imgMenu, imgHero, imgEnemy } from "./preload";
+import { preload, imgMenu, soundTheme } from "./preload";
 import { start } from "./game";
 
 const init = async () => {
@@ -68,6 +68,9 @@ const init = async () => {
       y > buttonY &&
       y < buttonY + buttonHeight
     ) {
+      soundTheme.volume = 0.1;
+      soundTheme.loop = true;
+      soundTheme.play();
       start();
     }
   });

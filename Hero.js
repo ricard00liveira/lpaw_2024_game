@@ -128,8 +128,8 @@ export default class Hero extends Circle {
   }
 
   shoot() {
-    const bulletSpeed = 7.5;
-    const bulletSize = 10;
+    const bulletSpeed = 8;
+    const bulletSize = 16;
     const bulletDirection = { x: 0, y: 0 };
     if (soundShoot) {
       soundShoot.play();
@@ -154,7 +154,7 @@ export default class Hero extends Circle {
       this.y + this.height / 2,
       bulletSize,
       bulletSpeed,
-      "rgba(0,100,255,.5)"
+      "rgba(0,100,255,9)"
     );
     bullet.id = ++this.bulletIdCounter;
     bullet.direction = bulletDirection;

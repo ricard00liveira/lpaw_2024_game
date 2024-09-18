@@ -22,12 +22,12 @@ const start = async () => {
   const hero = new Hero(350, 225, 20, 5, 75, 75, FRAMES);
   const maxHeroLife = 100;
   let heroLife = 100;
-  let bulletLifeGain = 10;
+  let vidaBase = 4;
   let CTX;
   let CANVAS;
 
   //Enemy
-  const qtdEnemies = 10;
+  const qtdEnemies = 8;
   const speedEnemies = 5;
   let speedEnemiesNew = speedEnemies + seconds / 10;
   const sizeEnemies = 13; //Área do colide (hitbox)
@@ -46,6 +46,7 @@ const start = async () => {
   function takeDamage(amount) {
     if (!invulnerable) {
       if (soundColide) {
+        soundColide.volume = 1;
         soundColide.play();
       }
       heroLife -= amount;
@@ -70,17 +71,18 @@ const start = async () => {
     hero.bullets = hero.bullets.filter((bullet) => bullet.id !== id);
   }
 
-  function gainLife(vidaMaxima) {
-    if (heroLife + bulletLifeGain <= 100 && heroLife + bulletLifeGain > 0) {
-      heroLife += bulletLifeGain;
+  function gainLife() {
+    let resultado = vidaBase + Math.ceil(seconds / 10);
+    if (heroLife + resultado <= 100 && heroLife + resultado > 0) {
+      heroLife += resultado;
     } else {
-      heroLife = vidaMaxima;
+      heroLife = maxHeroLife;
     }
   }
 
   function calculoDano(danoBase, tempo) {
     let resultado = danoBase + Math.ceil(tempo / 10);
-    console.log("Dano: ", resultado);
+    //console.log("Dano: ", resultado);
     return resultado;
   }
 
@@ -98,8 +100,6 @@ const start = async () => {
       FRAMES
     );
     enemies.push(newEnemy);
-    danoColide = calculoDano(baseDano, seconds);
-    takeDamage(danoColide);
   }
 
   const game = async () => {
@@ -112,7 +112,7 @@ const start = async () => {
       width: CANVAS.width,
       height: CANVAS.height - hubSize,
     };
-    console.log(boundaries);
+    //console.log(boundaries);
 
     // Inicializar inimigos
     enemies = Array.from(
@@ -132,7 +132,7 @@ const start = async () => {
         )
     );
 
-    console.log(enemies);
+    //console.log(enemies);
     keyPress(window);
     startCounter();
     loop();
@@ -144,9 +144,7 @@ const start = async () => {
       CTX.clearRect(0, 0, CANVAS.width, CANVAS.height);
 
       if (imgCenario) {
-        const pattern = CTX.createPattern(imgCenario, "repeat");
-        CTX.fillStyle = pattern;
-        CTX.fillRect(0, 0, CANVAS.width, CANVAS.height - hubSize);
+        CTX.drawImage(imgCenario, 0, 0, CANVAS.width, CANVAS.height - hubSize);
       }
 
       hero.move(boundaries, key);
@@ -158,6 +156,9 @@ const start = async () => {
 
         hero.bullets.forEach((bullet) => {
           if (enemy.colide(bullet)) {
+            //console.log("Vida ante: " + heroLife);
+            gainLife();
+            soundCollect.play();
             removeEnemyById(enemy.id);
             removeBulletById(bullet.id);
             addEnemy(
@@ -172,13 +173,15 @@ const start = async () => {
               35,
               FRAMES
             );
-            gainLife(maxHeroLife);
+            //console.log("Vida dps: " + heroLife);
           }
         });
 
         if (hero.colide(enemy.hit)) {
           // Remove o inimigo da lista quando colidir com o herói
           removeEnemyById(enemy.id);
+          danoColide = calculoDano(baseDano, seconds);
+          takeDamage(danoColide);
           addEnemy(
             0,
             0,
@@ -199,7 +202,7 @@ const start = async () => {
       if (key === " " && canShoot) {
         canShoot = false;
         hero.shoot(CTX);
-        console.log(hero.bullets);
+        //console.log(hero.bullets);
         reloadGun();
       }
       if (heroLife < 1) {
@@ -224,7 +227,7 @@ const start = async () => {
       } else {
         anime = requestAnimationFrame(loop);
         imprimirHud(hubSize);
-        imprimirLife(50, CANVAS.height - 11, heroLife);
+        imprimirLife(50, CANVAS.height - 11, heroLife, maxHeroLife);
         imprimirShoot(400, CANVAS.height - 11, canShoot);
         imprimirTempo(700, CANVAS.height - 11);
       }

@@ -3,23 +3,24 @@ import { loadAudio } from "./loaderAssets";
 
 let soundTheme, soundShoot, soundGameOver, soundColide, soundCollect; // Sons
 let imgBackground, imgMenu, imgEnemy, imgHero, imgCenario; // Imagens
+let soundPlaying = false;
 
 const preload = async () => {
   try {
-    console.groupCollapsed("Carregamento de Assets");
+    //console.groupCollapsed("Carregamento de Assets");
     const assets = await Promise.all([
       loadImage("/background.webp"),
       loadImage("/book_menu.png"),
       loadImage("/fireball_game_shoot.png"),
       loadImage("/sprite_char_transparente.png"),
-      loadImage("/dust.png"),
+      loadImage("/back_game.png"),
       loadAudio("/sounds/colide_cut.mp3"),
       loadAudio("/sounds/collect_life.mp3"),
       loadAudio("/sounds/gameover.mp3"),
       loadAudio("/sounds/shoot.mp3"),
       loadAudio("/sounds/theme.mp3"),
     ]);
-    console.groupEnd();
+    //console.groupEnd();
 
     const [
       loadedBackgroundImage,
@@ -104,10 +105,6 @@ const preload = async () => {
           });
         },
       });
-
-      // Inicia o som tema
-      soundTheme.volume = 0.005;
-      soundTheme.play();
     }
   } catch (error) {
     console.error("Error loading assets:", error);

@@ -14,8 +14,7 @@ function stopCounter() {
   clearInterval(intervalId);
 }
 
-function imprimirLife(posX, posY, heroLife) {
-  const maxLife = 100;
+function imprimirLife(posX, posY, heroLife, maxLife) {
   const barWidth = 200;
   const barHeight = 15;
   const lifePercentage = heroLife / maxLife;

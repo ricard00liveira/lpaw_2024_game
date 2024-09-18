@@ -2,7 +2,7 @@ const loadImage = async (url) =>
   new Promise((resolve, reject) => {
     const img = new Image();
     img.addEventListener("load", () => {
-      console.log("Imagem carregada: " + url);
+      //console.log("Imagem carregada: " + url);
       resolve(img);
     });
     img.addEventListener("error", (error) => {
@@ -10,17 +10,17 @@ const loadImage = async (url) =>
       reject(error);
     });
     img.src = url;
-    console.log("Carregando imagem: " + url);
+    //console.log("Carregando imagem: " + url);
   });
 
 const loadAudio = async (path) => {
   return new Promise((resolve, reject) => {
     const timeoutDuration = 30000; // 30 segundos
     const audio = new Audio(path);
-    console.log("Carregando áudio:" + path);
+    //console.log("Carregando áudio:" + path);
 
     const onCanPlay = () => {
-      console.log("Áudio carregado: " + path);
+      //console.log("Áudio carregado: " + path);
       clearTimeout(timeout);
       resolve(audio);
     };
